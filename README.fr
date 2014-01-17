@@ -1,0 +1,94 @@
+Nuance.js est un framework Javascript libre et open source, facilitant la création d'animations, dans la balise canvas de html5.
+La balise canvas permet d'afficher des animations sur toute plateforme disposant d'un navigateur moderne.
+Android, iOS, FirefoxOS, Tizen, Windows, Mac OSX, Linux, disposent tous de navigateurs tels Chrome 4.0+, Safari 3.1+, Firefox 2.0+, Internet Explorer 9+, Opera 9.0+.
+Ces navigateurs sont tous capable d'afficher des pages web implémentant canvas en html5.
+Actuellement, il est possible avec Nuance de dessiner sur le canvas, des lignes, arcs, rectangles, cercles, courbes de bézier, courbes quadratiques, et d'insérer des images ou portions d'images.
+Le principe de base est de lancer une animation, qui éxécute une ligne de temps (timeline), avec une frame pour chaque intervale de temps.
+Chaque frame est exécutée dans l'ordre de numérotation. 
+L'animation est configurée pour dessiner sur le canvas, lors de l'exécution des frames, les formes qui été attachées à chacune des frames sélectionnées. 
+
+
+fonctions :
+ - constructeur => initialisation de l'animation.
+
+	var anim = new Nuance(config);
+
+	@config: objet argument permettant de passer les paramêtres de configuration de l'animation.
+	config = {
+		id: 'jana', 
+		contextType: '2d',
+		interval: 80,
+		currentFrame: 0,
+		lastFrame: 50,
+		loop: false,
+		frames: {},
+		context: null,
+		start: false,
+
+	}
+	config.id: l'id html du canvas sur lequel l'animation doit s'exécuter, 'jana' par défaut.
+	config.contextType: le type de contexte du canvas, 2D par défaut.
+	config.interval: le temps en millisecondes, intervalle entre les frames, 80 ms par défaut.
+	config.lastFrame: la dernière frame de l'animation, 50 par défaut.
+	config.loop: true si l'animation doit redémarrer une fois finie, false sinon, false par défaut.
+	config.frames: objet contenant la configuration des frames, vide par défaut.
+	config.start: indique si on doit démarrer automatiquement l'animation, false par défaut.
+
+ - anim.play() 
+	démarre l'animation, si l'animation était en cours d'exécution, elle est arrêtée puis redémarrée.
+
+ - anim.stop()
+	arrête l'exécution de l'animation.
+
+ - anim.execFrame()
+	exécute la frame courante, en dessinant les formes attachées à cette frame dans l'ordre où elle ont été attachées.
+	Si la frame courante est la dernière, si le paramètre loop est activé (true), alors la frame courante devient la première, sinon si le paramètre loop est désactivé, l'exécution de l'animation est arrêtée.
+
+ - anim.setContext()
+	attribue le contexte courant au canvas courant.
+
+ - anim.drawImage(config)
+	copie une zone rectangulaire depuis une image source, vers une zone rectangulaire du canvas cible.
+	config.image: un objet javascript Image.
+	config.sx: abscisse du coin supérieur gauche de la zone de selection copié depuis l'image source. 
+	config.sy: ordonnée du coin supérieur gauche de la zone de selection copié depuis l'image source.
+	config.sh: hauteur de la zone de selection copié depuis l'image source.
+	config.sw: largeur de la zone de selection copié depuis l'image source.
+	config.dx: abscisse du coin supérieur gauche de la zone de selection collée dans le canvas de destination. 
+	config.dy: ordonnée du coin supérieur gauche de la zone de selection collée dans le canvas de destination.
+	config.dh: hauteur de la zone de selection collée dans le canvas de destination.
+	config.dw: largeur de la zone de selection collée dans le canvas de destination.
+	config.alpha: transparence alpha avec laquelle la zone est collée.
+	config.saveContext : détermine si la fonction doit sauvegarder le contexte d'avant l'appel pour le restituer après.
+	
+
+ - anim.drawRect(config)
+	dessine un rectangle de couleur dans le canvas.
+	config.x : abscisse du coin supérieur gauche du rectangle dans le canvas, 0 par défaut.
+	config.y : ordonnée du coin supérieur gauche du rectangle dans le canvas, 0 par défaut.
+	config.width : largeur du rectangle dans le canvas.
+	config.height : hauteur du rectangle dans le canvas.
+	config.stroke : détermine si une bordure doit être déssinée.
+	config.strokeStyle : détermine le style de bordure (color|gradient|pattern), si absent aucune bordure n'est dessinée.
+	config.fill : détermine si le fond doit être dessiné lors du dessin d'une bordure.
+	config.fillStyle : détermine le style de fond (color|gradient|pattern).
+	config.clear : détermine si le rectangle doit être effacé (rgb #000000 alpha 0) 
+	config.saveContext : détermine si la fonction doit sauvegarder le contexte d'avant l'appel pour le restituer après.
+
+ - anim.drawCircle(config)
+	dessine un cercle dans le canvas.
+	config.x : abscisse du centre du cercle, this.context.width/2 par défaut.
+	config.y : ordonnée du centre du cercle, this.context.height/2 par défaut.
+	config.radius : rayon du cercle.
+	config.stroke : détermine si une bordure doit être déssinée.
+	config.strokeStyle : détermine le style de bordure (color|gradient|pattern), si absent aucune bordure n'est dessinée.
+	config.fill : détermine si le fond doit être dessiné lors du dessin d'une bordure.
+	config.fillStyle : détermine le style de fond (color|gradient|pattern).
+	config.saveContext : détermine si la fonction doit sauvegarder le contexte d'avant l'appel pour le restituer après.
+
+ - anim.drawShape()
+	dessine une forme dans le canvas.
+	
+
+ - anim.addTween()
+
