@@ -86,9 +86,25 @@ fonctions :
 	config.fillStyle : détermine le style de fond (color|gradient|pattern).
 	config.saveContext : détermine si la fonction doit sauvegarder le contexte d'avant l'appel pour le restituer après.
 
- - anim.drawShape()
+ - anim.drawShape(config)
 	dessine une forme dans le canvas.
-	
+	config.x : abscisse du coin supérieur gauche de la forme dans le canvas, 0 par défaut.
+	config.y : ordonnée du coin supérieur gauche de la forme dans le canvas, 0 par défaut.
+	config.fillStyle : détermine le style de fond de la forme (color|gradient|pattern).
+	config.strokeStyle : détermine le style de bordure de la forme (color|gradient|pattern).
+	config.lineWidth : détermine la largeur des lignes.
+	config.lineCap : détermine l'apparence des fins de lignes.
+	config.lineJoin : détermine l'apparence des angles où deux lignes se retrouvent.
+	config.miterLimit : limite de la mitre, là où deux lignes se joignent dans un angle aigu.
+	config.segments : tableau contenant les segments de la forme.
+	config.segments.type : type de segment, les types peuvent être Nuance.LINE (ligne), Nuance.ARC (arc), Nuance.QUAD (courbe quadratique), Nuance.BEZIER (courbe de bézier).
 
- - anim.addTween()
+
+ - anim.addTween(firstFrame, lastFrame, f_callback, args)
+	Ajoute une transition entre une frame de départ et jusqu'à une frame de fin.
+	firstFrame : frame de départ de la transition.
+	lastFrame : frame de fin de transition.
+	f_callback : fonction de rappel (callback) permettant de créer les frames. 
+		les arguments de f_callback doivent être dans l'ordre : firstFrame, lastFrame, args
+	args : arguments à passer à la fonction de rappel (f_callback), peut être de tout type, à la convenance de l'auteur de la fonction.
 

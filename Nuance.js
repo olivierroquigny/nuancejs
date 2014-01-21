@@ -144,9 +144,9 @@ Nuance.prototype.drawRect = function(config){
 		this.context.strokeStyle = config.strokeStyle;
 	}
 	
-	if(config.stroke){
+	if(config.stroke || config.strokeStyle){
 		this.context.strokeRect(x, y, width, height);
-		if(config.fill){
+		if(config.fill || config.fillStyle){
 			this.context.fillRect(x, y, width, height);
 		}
 	}else if(config.clear){
