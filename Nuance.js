@@ -3,7 +3,20 @@
  * @author: Olivier Roquigny
  * @licence: GPL 2
  * 
- * @TODO: layers management => use html id as JS keys
+ * @TODO: layers management 
+	- use html id as JS keys
+	- default canvas (id)
+	- get a div container => config.container_id || "c_nuance"
+	- get 
+		- the canvases already present in the container 
+			make a stack with them
+		- or the only canvas (id) 
+		- or the default canvas 
+	- make a container if (config.container_id and not exist?
+		- where ?
+	- make canvases in the container with IDs
+	- config with multi canvases frames
+
  * @TODO: make frames, shapes, segments as Arrays => if (value instanceof Array) {
  * @TODO: sort shapes and segments and put them consecutive
  * @TODO: requestAnimationFrame
@@ -14,6 +27,10 @@
  * @TODO: easy region removing
  * @TODO: shape detection
  * @TODO: easy shape creation
+ * @TODO: video support
+ * @TODO: audio support
+ * @TODO: webgl support
+ * @TODO: SVG support?
  */
 function Nuance(config){
 	var config = config || {};

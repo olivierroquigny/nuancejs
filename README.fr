@@ -15,7 +15,7 @@ fonctions :
 
 	@config: objet argument permettant de passer les paramêtres de configuration de l'animation.
 	config = {
-		id: 'jana', 
+		id: 'nuance', 
 		contextType: '2d',
 		interval: 80,
 		currentFrame: 0,
@@ -26,7 +26,7 @@ fonctions :
 		start: false,
 
 	}
-	config.id: l'id html du canvas sur lequel l'animation doit s'exécuter, 'jana' par défaut.
+	config.id: l'id html du canvas sur lequel l'animation doit s'exécuter, 'nuance' par défaut.
 	config.contextType: le type de contexte du canvas, 2D par défaut.
 	config.interval: le temps en millisecondes, intervalle entre les frames, 80 ms par défaut.
 	config.lastFrame: la dernière frame de l'animation, 50 par défaut.
