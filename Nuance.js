@@ -4,6 +4,17 @@
  * @licence: GPL 2
  * 
  * @TODO: layers management 
+
+	- we need a stack of layers and for each layer we need :
+		- layer order number
+		- an optionnal name 
+		- html id
+		- context or type
+		- frames as Array
+		- container id if we want to:
+			- create the layer on fly 
+			- manipulate the layer and parent on the fly (resize, move, hide, show ...)
+
 	- use html id as JS keys
 	- default canvas (id)
 	- get a div container => config.container_id || "c_nuance"
@@ -32,19 +43,35 @@
  * @TODO: webgl support
  * @TODO: SVG support?
  */
+
 function Nuance(config){
 	var config = config || {};
-	this.id = config.id || 'nuance';
-	this.contextType = config.contextType || '2d';
 	this.interval = config.interval || 80;
 	this.currentFrame = 0;
 	this.lastFrame = config.lastFrame || 50;
 	this.loop = config.loop || false;
-	this.frames = config.frames || {};
-	this.context = null;
+	// loop on the layers in config
+	this.layers = new Array();
+	config.layers = config.layers || new Array();
+	for(var i=0; i<config.layers.length; i++){
+		this.layers[i] = new Object();
+		this.layers[i].id = config.layers[i].id || 'nuance'; // in the stack
+		this.layers[i].contextType = config.layers[i].contextType || '2d'; // in the stack
+		this.layers[i].frames = config.layers[i].frames || {}; // in the stack
+		this.layers[i].context = null; // in the stack
 
-	this.setContext()
-	
+		this.setContext(i); // in the stack		
+	}
+/*
+	this.id = config.id || 'nuance'; // in the stack
+	this.contextType = config.contextType || '2d'; // in the stack
+	this.frames = config.frames || {}; // in the stack
+	this.context = null; // in the stack
+
+	this.setContext(); // in the stack
+*/
+
+
 	if(config.start){
 		this.play();
 	}
@@ -76,31 +103,34 @@ Nuance.prototype.stop = function(){
 }
 
 Nuance.prototype.execFrame = function(){
-	if(this.frames[this.currentFrame]){
-		var frame = this.frames[this.currentFrame];
-		if(this.context){
-			if(frame.shapes){
-				for(var s in frame.shapes){
-					var shape = frame.shapes[s]
-					if(shape.type){
-						/* it's a complete shape as rect, circle, image ... */
-						switch(shape.type){
-							case Nuance.RECT:
-								this.drawRect(shape);
-								break;
-							case Nuance.CIRCLE:
-								this.drawCircle(shape);
-								break;
-							case Nuance.IMAGE:
-								this.drawImage(shape);
-								break;
-							default:
-							
-								break;
+	// in the stack
+	for(var i=0; i<this.layers.length; i++){
+		if(this.layers[i].frames[this.currentFrame]){
+			var frame = this.layers[i].frames[this.currentFrame];
+			if(this.layers[i].context){
+				if(frame.shapes){
+					for(var s in frame.shapes){
+						var shape = frame.shapes[s]
+						if(shape.type){
+							/* it's a complete shape as rect, circle, image ... */
+							switch(shape.type){
+								case Nuance.RECT:
+									this.drawRect(i, shape);
+									break;
+								case Nuance.CIRCLE:
+									this.drawCircle(i, shape);
+									break;
+								case Nuance.IMAGE:
+									this.drawImage(i, shape);
+									break;
+								default:
+
+									break;
+							}
+						}else if(shape.segments){
+							/* it's a composed shape, with multiples segments as line, arc, besier, quadratic ... */
+							this.drawShape(i, shape);
 						}
-					}else if(shape.segments){
-						/* it's a composed shape, with multiples segments as line, arc, besier, quadratic ... */
-						this.drawShape(shape);
 					}
 				}
 			}
@@ -117,16 +147,17 @@ Nuance.prototype.execFrame = function(){
 	}
 }
 
-Nuance.prototype.setContext = function(){
-	var cvs = document.getElementById(this.id);
+// in the stack
+Nuance.prototype.setContext = function(layer_num){
+	var cvs = document.getElementById(this.layers[layer_num].id);
 	if(cvs.getContext){
-		this.context = cvs.getContext(this.contextType);
+		this.layers[layer_num].context = cvs.getContext(this.layers[layer_num].contextType);
 	}else{
-		this.context = null;
+		this.layers[layer_num].context = null;
 	}
 }
 
-Nuance.prototype.drawImage = function(config){
+Nuance.prototype.drawImage = function(layer_num, config){
 	if(config.image && config.image.width > 0){
 		var img = config.image;
 	}else{
@@ -142,110 +173,114 @@ Nuance.prototype.drawImage = function(config){
 	var dh = config.dh || sh;
 	var alpha = config.alpha || 1;
 	
-	this.context.save();
-	this.context.globalAlpha = alpha;
-	this.context.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
-	this.context.restore();
+	// in the stack
+	this.layers[layer_num].context.save();
+	this.layers[layer_num].context.globalAlpha = alpha;
+	this.layers[layer_num].context.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+	this.layers[layer_num].context.restore();
 }
 
-Nuance.prototype.drawRect = function(config){
+Nuance.prototype.drawRect = function(layer_num, config){
 	var x = config.x || 0;
 	var y = config.y || 0;
 	var width = config.width;
 	var height = config.height;
 	
+	// in the stack
 	if(config.fillStyle){
-		this.context.fillStyle = config.fillStyle;
+		this.layers[layer_num].context.fillStyle = config.fillStyle;
 	}
 	if(config.strokeStyle){
-		this.context.strokeStyle = config.strokeStyle;
+		this.layers[layer_num].context.strokeStyle = config.strokeStyle;
 	}
 	
 	if(config.stroke || config.strokeStyle){
-		this.context.strokeRect(x, y, width, height);
+		this.layers[layer_num].context.strokeRect(x, y, width, height);
 		if(config.fill || config.fillStyle){
-			this.context.fillRect(x, y, width, height);
+			this.layers[layer_num].context.fillRect(x, y, width, height);
 		}
 	}else if(config.clear){
-		this.context.clearRect(x, y, width, height);
+		this.layers[layer_num].context.clearRect(x, y, width, height);
 	}else{
-		this.context.fillRect(x, y, width, height);
+		this.layers[layer_num].context.fillRect(x, y, width, height);
 	}
 }
 
-Nuance.prototype.drawCircle = function(config){
-	var x = config.x || this.context.width/2;
-	var y = config.y || this.context.height/2;
+Nuance.prototype.drawCircle = function(layer_num, config){
+	var x = config.x || this.layers[layer_num].context.width/2;
+	var y = config.y || this.layers[layer_num].context.height/2;
 	var radius = config.radius;
-	
+
+	// in the stack	
 	if(config.fillStyle){
-		this.context.fillStyle = config.fillStyle;
+		this.layers[layer_num].context.fillStyle = config.fillStyle;
 	}
 
 	if(config.strokeStyle){
-		this.context.strokeStyle = config.strokeStyle;
+		this.layers[layer_num].context.strokeStyle = config.strokeStyle;
 	}
 
-	this.context.beginPath();
+	this.layers[layer_num].context.beginPath();
 	
-	this.context.arc(x, y, radius, 0, 2*Math.PI, false);
+	this.layers[layer_num].context.arc(x, y, radius, 0, 2*Math.PI, false);
 	
 	if(config.stroke){
-		this.context.stroke()
+		this.layers[layer_num].context.stroke()
 		if(config.fill){
-			this.context.fill();
+			this.layers[layer_num].context.fill();
 		}
 	}else{
-		this.context.fill();
+		this.layers[layer_num].context.fill();
 	}
-	this.context.closePath();
+	this.layers[layer_num].context.closePath();
 }
 
-Nuance.prototype.drawShape = function(config){
+Nuance.prototype.drawShape = function(layer_num, config){
 	var x = config.x || 0;
 	var y = config.y || 0;
-	
+
+	// in the stack	
 	if(config.fillStyle){
-		this.context.fillStyle = config.fillStyle;
+		this.layers[layer_num].context.fillStyle = config.fillStyle;
 	}
 
 	if(config.strokeStyle){
-		this.context.strokeStyle = config.strokeStyle;
+		this.layers[layer_num].context.strokeStyle = config.strokeStyle;
 	}
 	
 	if(config.lineWidth){
-		this.context.lineWidth = config.lineWidth;
+		this.layers[layer_num].context.lineWidth = config.lineWidth;
 	}
 	
 	if(config.lineCap){
-		this.context.lineCap = config.lineCap;
+		this.layers[layer_num].context.lineCap = config.lineCap;
 	}
 	
 	if(config.lineJoin){
-		this.context.lineJoin = config.lineJoin;
+		this.layers[layer_num].context.lineJoin = config.lineJoin;
 	}
 	
 	if(config.miterLimit){
-		this.context.miterLimit = config.miterLimit;
+		this.layers[layer_num].context.miterLimit = config.miterLimit;
 	}
 
-	this.context.beginPath();
-		this.context.moveTo(x,y);
+	this.layers[layer_num].context.beginPath();
+		this.layers[layer_num].context.moveTo(x,y);
 
 		for(var s in config.segments){
 			var segment = config.segments[s];
 			switch(segment.type){
 				case Nuance.LINE:
-					this.context.lineTo(segment.x,segment.y);
+					this.layers[layer_num].context.lineTo(segment.x,segment.y);
 					break;
 				case Nuance.ARC:
-					this.context.arc(segment.x, segment.y, segment.radius, segment.startAngle, segment.endAngle, segment.anticlockwise);
+					this.layers[layer_num].context.arc(segment.x, segment.y, segment.radius, segment.startAngle, segment.endAngle, segment.anticlockwise);
 					break;
 				case Nuance.QUAD:
-					this.context.quadraticCurveTo(segment.cp1x, segment.cp1y, segment.x, segment.y);
+					this.layers[layer_num].context.quadraticCurveTo(segment.cp1x, segment.cp1y, segment.x, segment.y);
 					break;
 				case Nuance.BEZIER:
-					this.context.bezierCurveTo(segment.cp1x, segment.cp1y, segment.cp2x, segment.cp2y, segment.x, segment.y);
+					this.layers[layer_num].context.bezierCurveTo(segment.cp1x, segment.cp1y, segment.cp2x, segment.cp2y, segment.x, segment.y);
 					break;
 				default:
 				
@@ -254,28 +289,29 @@ Nuance.prototype.drawShape = function(config){
 		}
 	
 	if(config.stroke){
-		this.context.stroke()
+		this.layers[layer_num].context.stroke()
 		if(config.fill){
-			this.context.fill();
+			this.layers[layer_num].context.fill();
 		}
 	}else{
-		this.context.fill();
+		this.layers[layer_num].context.fill();
 	}
-	this.context.closePath();
+	this.layers[layer_num].context.closePath();
 	
 }
 
-Nuance.prototype.addTween = function(firstFrame, lastFrame, f_callback, args){
+Nuance.prototype.addTween = function(layer_num, firstFrame, lastFrame, f_callback, args){
+	// in the stack
 	var frames = f_callback.call(this, firstFrame, lastFrame, args);
 	for(var f in frames){
 		var keys;
-		if( ! this.frames[f]){
-			this.frames[f] = { shapes: {}}
+		if( ! this.layers[layer_num].frames[f]){
+			this.layers[layer_num].frames[f] = { shapes: {}}
 		}
-		if(this.frames[f].shapes){
+		if(this.layers[layer_num].frames[f].shapes){
 			for(var s in frames[f].shapes){
 				var k;
-				if( ! this.frames[f].shapes.hasOwnProperty(s)){
+				if( ! this.layers[layer_num].frames[f].shapes.hasOwnProperty(s)){
 					k = s;
 				}else{
 					do{
@@ -286,10 +322,10 @@ Nuance.prototype.addTween = function(firstFrame, lastFrame, f_callback, args){
 							var r = Math.random();
 							k = k + ascii.charAt(Math.floor(r * ascii.length));
 						}
-					}while(this.frames[f].shapes.hasOwnProperty(k));
+					}while(this.layers[layer_num].frames[f].shapes.hasOwnProperty(k));
 				}
 				
-				this.frames[f].shapes[k] = frames[f].shapes[s];
+				this.layers[layer_num].frames[f].shapes[k] = frames[f].shapes[s];
 			}
 		}
 	}

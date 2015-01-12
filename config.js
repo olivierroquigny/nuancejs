@@ -13,14 +13,26 @@ window.onload = function(){
 	var images = new Array();
 	images[0] = new Image();
 
-	var anim = new Nuance({ 
-		start: false , 
-		id: 'nuance', 
-		loop: false, 
-		lastFrame: lastFrame,
-		frames: {
+	// on the stack
+/*
+		this.layers[i].id = config.layers[i].id || 'nuance'; // in the stack
+		this.layers[i].contextType = config.layers[i].contextType || '2d'; // in the stack
+		this.layers[i].frames = config.layers[i].frames || {}; // in the stack
+		this.layers[i].context = null; // in the stack
 
-		},
+*/
+	var anim = new Nuance({ 
+		layers: new Array(
+			{
+				start: false , 
+				id: 'nuance', 
+				loop: false, 
+				lastFrame: lastFrame,
+				frames: {
+
+				},
+			}
+		)
 	});
 	
 	/********************************
@@ -62,7 +74,7 @@ window.onload = function(){
 		{x: 412, y: 0, w: 53, h: 163}, // c
 		{x: 465, y: 0, w: 76, h: 163}, // e
 	];
-	anim.addTween(limitFramesAnim.framb[0], limitFramesAnim.framb[1], nuanceLab, {img: images[0], pics: pics}); 
+	anim.addTween(0, limitFramesAnim.framb[0], limitFramesAnim.framb[1], nuanceLab, {img: images[0], pics: pics}); 
 	
 	/**********************************
 	 * Tween's config for LAB
@@ -294,7 +306,7 @@ window.onload = function(){
 		
 		var rand = Math.floor(Math.random() * (intervalGreen - 10)) + limitFramesAnim.greenLab[0];
 		var t = tweens[tween];
-		anim.addTween(rand, (rand+10), square, {x: t.x, y: t.y, r: green.r, g: green.g, b: green.b, type: t.type }); 
+		anim.addTween(0, rand, (rand+10), square, {x: t.x, y: t.y, r: green.r, g: green.g, b: green.b, type: t.type }); 
 	}
 	
 	/***************************************
@@ -341,6 +353,7 @@ window.onload = function(){
 	function moveSquare(frame, obj){
 		// red square
 		anim.addTween(
+			0,
 			frame + limitFramesAnim.redLab[0], /* first frame for the tween */
 			frame + limitFramesAnim.redLab[0], /* last frame */
 			square, 
@@ -384,6 +397,7 @@ window.onload = function(){
 					w_y = tweens[obj.precedent].y + 1;
 				}
 				anim.addTween( /* replace the precedent with a white square for the transparent bug on the arc border */
+					0,
 					frame + limitFramesAnim.redLab[0],
 					frame + limitFramesAnim.redLab[0], 
 					square, { 
@@ -398,6 +412,7 @@ window.onload = function(){
 			}
 			// green square
 			anim.addTween( /* replace the precedent with a green square */
+				0,
 				frame + limitFramesAnim.redLab[0],
 				frame + limitFramesAnim.redLab[0], 
 				square, { 
