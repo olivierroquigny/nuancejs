@@ -22,12 +22,12 @@ window.onload = function(){
 
 */
 	var anim = new Nuance({ 
+		start: false , 
+		loop: false, 
+		lastFrame: lastFrame,
 		layers: new Array(
 			{
-				start: false , 
 				id: 'nuance', 
-				loop: false, 
-				lastFrame: lastFrame,
 				frames: {
 
 				},
