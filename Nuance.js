@@ -50,27 +50,17 @@ function Nuance(config){
 	this.currentFrame = 0;
 	this.lastFrame = config.lastFrame || 50;
 	this.loop = config.loop || false;
-	// loop on the layers in config
 	this.layers = new Array();
 	config.layers = config.layers || new Array();
 	for(var i=0; i<config.layers.length; i++){
 		this.layers[i] = new Object();
-		this.layers[i].id = config.layers[i].id || 'nuance'; // in the stack
-		this.layers[i].contextType = config.layers[i].contextType || '2d'; // in the stack
-		this.layers[i].frames = config.layers[i].frames || {}; // in the stack
-		this.layers[i].context = null; // in the stack
+		this.layers[i].id = config.layers[i].id || 'nuance'; 
+		this.layers[i].contextType = config.layers[i].contextType || '2d'; 
+		this.layers[i].frames = config.layers[i].frames || {};
+		this.layers[i].context = null;
 
-		this.setContext(i); // in the stack		
+		this.setContext(i);
 	}
-/*
-	this.id = config.id || 'nuance'; // in the stack
-	this.contextType = config.contextType || '2d'; // in the stack
-	this.frames = config.frames || {}; // in the stack
-	this.context = null; // in the stack
-
-	this.setContext(); // in the stack
-*/
-
 
 	if(config.start){
 		this.play();
@@ -103,7 +93,6 @@ Nuance.prototype.stop = function(){
 }
 
 Nuance.prototype.execFrame = function(){
-	// in the stack
 	for(var i=0; i<this.layers.length; i++){
 		if(this.layers[i].frames[this.currentFrame]){
 			var frame = this.layers[i].frames[this.currentFrame];
@@ -147,7 +136,6 @@ Nuance.prototype.execFrame = function(){
 	}
 }
 
-// in the stack
 Nuance.prototype.setContext = function(layer_num){
 	var cvs = document.getElementById(this.layers[layer_num].id);
 	if(cvs.getContext){
@@ -173,7 +161,6 @@ Nuance.prototype.drawImage = function(layer_num, config){
 	var dh = config.dh || sh;
 	var alpha = config.alpha || 1;
 	
-	// in the stack
 	this.layers[layer_num].context.save();
 	this.layers[layer_num].context.globalAlpha = alpha;
 	this.layers[layer_num].context.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
@@ -186,7 +173,6 @@ Nuance.prototype.drawRect = function(layer_num, config){
 	var width = config.width;
 	var height = config.height;
 	
-	// in the stack
 	if(config.fillStyle){
 		this.layers[layer_num].context.fillStyle = config.fillStyle;
 	}
@@ -211,7 +197,6 @@ Nuance.prototype.drawCircle = function(layer_num, config){
 	var y = config.y || this.layers[layer_num].context.height/2;
 	var radius = config.radius;
 
-	// in the stack	
 	if(config.fillStyle){
 		this.layers[layer_num].context.fillStyle = config.fillStyle;
 	}
@@ -239,7 +224,6 @@ Nuance.prototype.drawShape = function(layer_num, config){
 	var x = config.x || 0;
 	var y = config.y || 0;
 
-	// in the stack	
 	if(config.fillStyle){
 		this.layers[layer_num].context.fillStyle = config.fillStyle;
 	}
@@ -301,7 +285,6 @@ Nuance.prototype.drawShape = function(layer_num, config){
 }
 
 Nuance.prototype.addTween = function(layer_num, firstFrame, lastFrame, f_callback, args){
-	// in the stack
 	var frames = f_callback.call(this, firstFrame, lastFrame, args);
 	for(var f in frames){
 		var keys;
