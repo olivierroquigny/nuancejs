@@ -9,13 +9,13 @@
 		- layer order number
 		- an optionnal name 
 		- html id
-		- context or type
+		- context type
 		- frames as Array
 		- container id if we want to:
 			- create the layer on fly 
 			- manipulate the layer and parent on the fly (resize, move, hide, show ...)
 
-	- use html id as JS keys
+	- use html id as JS keys => an array linking keys to number ?
 	- default canvas (id)
 	- get a div container => config.container_id || "c_nuance"
 	- get 
@@ -56,6 +56,8 @@ function Nuance(config){
 		this.layers[i] = new Object();
 		this.layers[i].id = config.layers[i].id || 'nuance'; 
 		this.layers[i].contextType = config.layers[i].contextType || '2d'; 
+		this.layers[i].name = config.layers[i].name || ''; 
+		this.layers[i].container_id = config.layers[i].container_id || ''; 
 		this.layers[i].frames = config.layers[i].frames || {};
 		this.layers[i].context = null;
 

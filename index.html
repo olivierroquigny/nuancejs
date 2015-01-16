@@ -5,8 +5,24 @@
 		<meta charset="utf-8">
 		<script type="text/javascript" src="./Nuance.js"></script>
 		<script type="text/javascript" src="./config.js"></script>
+		<style type="text/css">
+			#container_1 {
+				position: relative;
+			}
+			#nuance {
+				position: absolute;
+				z-index: 1;
+			}
+			#lab {
+				position: absolute;
+				z-index: 2;
+			}
+		</style>
 	</head>
 	<body>
+		<div id="container_1">
 		<canvas id="nuance" width="600" height="600"></canvas>
+		<canvas id="lab" width="600" height="600"></canvas>
+		</div>
 	</body>
 </html>
