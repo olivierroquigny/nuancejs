@@ -28,9 +28,9 @@ window.onload = function(){
 		layers: new Array(
 			{
 				id: 'nuance', 
-				frames: {
+				frames: [
 
-				},
+				],
 			}
 		)
 	});
@@ -39,7 +39,7 @@ window.onload = function(){
 	 * Tween's config for NuanceLab
 	 *******************************/
 	function nuanceLab(firstFrame, lastFrame, args){
-		var frames = {}
+		var frames = [];
 		var nbFrames = lastFrame - firstFrame;
 		if(nbFrames < 1){
 			nbFrames = 1;
@@ -81,7 +81,7 @@ window.onload = function(){
 	 **********************************/
 	function square(firstFrame, lastFrame, args){
 		
-		var frames = {}
+		var frames = [];
 		var nbFrames = lastFrame - firstFrame;
 		if(nbFrames < 1){
 			nbFrames = 1;

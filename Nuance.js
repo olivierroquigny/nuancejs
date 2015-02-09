@@ -6,12 +6,12 @@
  * @TODO: layers management 
 
 	- we need a stack of layers and for each layer we need :
-		- layer order number
-		- an optionnal name 
-		- html id
-		- context type
-		- frames as Array
-		- container id if we want to:
+		- layer order number (done)
+		- an optionnal name (done)
+		- html id (done)
+		- context type (done)
+		- frames as Array (done)
+		- container id if we want to: (done)
 			- create the layer on fly 
 			- manipulate the layer and parent on the fly (resize, move, hide, show ...)
 
@@ -58,7 +58,7 @@ function Nuance(config){
 		this.layers[i].contextType = config.layers[i].contextType || '2d'; 
 		this.layers[i].name = config.layers[i].name || ''; 
 		this.layers[i].container_id = config.layers[i].container_id || ''; 
-		this.layers[i].frames = config.layers[i].frames || {};
+		this.layers[i].frames = config.layers[i].frames || [];
 		this.layers[i].context = null;
 
 		this.setContext(i);
@@ -288,29 +288,32 @@ Nuance.prototype.drawShape = function(layer_num, config){
 
 Nuance.prototype.addTween = function(layer_num, firstFrame, lastFrame, f_callback, args){
 	var frames = f_callback.call(this, firstFrame, lastFrame, args);
-	for(var f in frames){
-		var keys;
-		if( ! this.layers[layer_num].frames[f]){
-			this.layers[layer_num].frames[f] = { shapes: {}}
-		}
-		if(this.layers[layer_num].frames[f].shapes){
-			for(var s in frames[f].shapes){
-				var k;
-				if( ! this.layers[layer_num].frames[f].shapes.hasOwnProperty(s)){
-					k = s;
-				}else{
-					do{
-						k = '';
-						var ascii = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	for(var f=0; f<frames.length; f++){
 
-						for( var j=0; j < 5; j++ ){
-							var r = Math.random();
-							k = k + ascii.charAt(Math.floor(r * ascii.length));
-						}
-					}while(this.layers[layer_num].frames[f].shapes.hasOwnProperty(k));
+		if(frames[f] instanceof Object){
+			var keys;
+			if( ! this.layers[layer_num].frames[f]){
+				this.layers[layer_num].frames[f] = { shapes: {}}
+			}
+			if(this.layers[layer_num].frames[f].shapes){
+				for(var s in frames[f].shapes){
+					var k;
+					if( ! this.layers[layer_num].frames[f].shapes.hasOwnProperty(s)){
+						k = s;
+					}else{
+						do{
+							k = '';
+							var ascii = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+							for( var j=0; j < 5; j++ ){
+								var r = Math.random();
+								k = k + ascii.charAt(Math.floor(r * ascii.length));
+							}
+						}while(this.layers[layer_num].frames[f].shapes.hasOwnProperty(k));
+					}
+
+					this.layers[layer_num].frames[f].shapes[k] = frames[f].shapes[s];
 				}
-				
-				this.layers[layer_num].frames[f].shapes[k] = frames[f].shapes[s];
 			}
 		}
 	}
