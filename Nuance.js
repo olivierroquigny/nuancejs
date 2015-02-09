@@ -14,10 +14,9 @@
 		- container id if we want to: (done)
 			- create the layer on fly 
 			- manipulate the layer and parent on the fly (resize, move, hide, show ...)
+	- default canvas (id) (done)
 
-	- use html id as JS keys => an array linking keys to number ?
-	- default canvas (id)
-	- get a div container => config.container_id || "c_nuance"
+	- get a div container => config.container_id 
 	- get 
 		- the canvases already present in the container 
 			make a stack with them
@@ -25,8 +24,9 @@
 		- or the default canvas 
 	- make a container if (config.container_id and not exist?
 		- where ?
-	- make canvases in the container with IDs
+	- make on the fly canvases in the container with IDs
 	- config with multi canvases frames
+	- use html id as JS keys => an array linking keys to number ?
 
  * @TODO: make frames, shapes, segments as Arrays => if (value instanceof Array) {
  * @TODO: sort shapes and segments and put them consecutive
