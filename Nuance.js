@@ -5,27 +5,13 @@
  * 
  * @TODO: layers management 
 
-	- we need a stack of layers and for each layer we need :
-		- layer order number (done)
-		- an optionnal name (done)
-		- html id (done)
-		- context type (done)
-		- frames as Array (done)
-		- container id if we want to: (done)
-			- create the layer on fly 
-			- manipulate the layer and parent on the fly (resize, move, hide, show ...)
-	- default canvas (id) (done)
-
-	- get a div container => config.container_id 
 	- get 
 		- the canvases already present in the container 
 			make a stack with them
 		- or the only canvas (id) 
 		- or the default canvas 
-	- make a container if (config.container_id and not exist?
-		- where ?
 	- make on the fly canvases in the container with IDs
-	- config with multi canvases frames
+	- manipulate the layer and parent on the fly (resize, move, hide, show ...)
 	- use html id as JS keys => an array linking keys to number ?
 
  * @TODO: make frames, shapes, segments as Arrays => if (value instanceof Array) {
@@ -36,7 +22,7 @@
  * @TODO: memorize region
  * @TODO: easy region copying
  * @TODO: easy region removing
- * @TODO: shape detection
+ * @TODO: shape detection (loop only on shapes who need actions)
  * @TODO: easy shape creation
  * @TODO: video support
  * @TODO: audio support
@@ -139,12 +125,25 @@ Nuance.prototype.execFrame = function(){
 }
 
 Nuance.prototype.setContext = function(layer_num){
+	if(layer_num == undefined){
+		layer_num = 0;
+	}
 	var cvs = document.getElementById(this.layers[layer_num].id);
 	if(cvs.getContext){
 		this.layers[layer_num].context = cvs.getContext(this.layers[layer_num].contextType);
 	}else{
 		this.layers[layer_num].context = null;
 	}
+}
+
+Nuance.prototype.setContainer = function(layer_num, container_id){
+	layer_num = layer_num || 0;
+
+	if(container_id != undefined){
+		this.layers[layer_num].container_id = container_id;
+	}
+
+	this.layers[i].container = document.getElementById(this.layers[layer_num].container_id);
 }
 
 Nuance.prototype.drawImage = function(layer_num, config){
