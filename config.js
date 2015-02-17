@@ -13,14 +13,6 @@ window.onload = function(){
 	var images = new Array();
 	images[0] = new Image();
 
-	// on the stack
-/*
-		this.layers[i].id = config.layers[i].id || 'nuance'; // in the stack
-		this.layers[i].contextType = config.layers[i].contextType || '2d'; // in the stack
-		this.layers[i].frames = config.layers[i].frames || {}; // in the stack
-		this.layers[i].context = null; // in the stack
-
-*/
 	var anim = new Nuance({ 
 		start: false , 
 		loop: false, 

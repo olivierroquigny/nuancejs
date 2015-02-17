@@ -188,8 +188,11 @@ Nuance.prototype.getLayersFromContainer = function(container_id){
 	if( ! container){
 		return false;
 	}
-	
-	
+
+	var cvs = container.getElementsByTagName('canvas');
+	for(var i=0; i<cvs.length; i++){
+		//@TODO
+	}
 	
 }
 
