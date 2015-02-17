@@ -10,7 +10,7 @@
 			make a stack with them
 		- or the only canvas (id) 
 		- or the default canvas 
-	- make on the fly canvases in the container with IDs
+	- make on the fly canvases in the container with IDs (done)
 	- manipulate the layer and parent on the fly (resize, move, hide, show ...)
 	- use html id as JS keys => an array linking keys to number ?
 
@@ -46,6 +46,25 @@ function Nuance(config){
 		this.layers[i].container_id = config.layers[i].container_id || ''; 
 		this.layers[i].frames = config.layers[i].frames || [];
 		this.layers[i].context = null;
+
+		if(config.layers[i].create && config.layers[i].container_id){
+			var container = document.getElementById(this.layers[i].container_id); 
+			var height;
+			var width;
+
+			if(config.layers[i].height || config.layers[i].height === 0){
+				height = config.layers[i].height;
+			}else{
+				height = container.clientHeight;
+			}
+			if(config.layers[i].width || config.layers[i].width === 0){
+				width = config.layers[i].width;
+			}else{
+				width = container.clientWidth;
+			}
+
+			this.addCanvas(this.layers[i].container_id, this.layers[i].id, height, width);			
+		}
 
 		this.setContext(i);
 	}
@@ -144,6 +163,34 @@ Nuance.prototype.setContainer = function(layer_num, container_id){
 	}
 
 	this.layers[i].container = document.getElementById(this.layers[layer_num].container_id);
+}
+
+Nuance.prototype.addCanvas = function(container_id, id, height, width){
+	var container = document.getElementById(container_id);
+	
+	if( ! container){
+		return false;
+	}
+
+	var canvas = document.createElement('canvas');
+
+	canvas.setAttribute('id', id);
+	canvas.setAttribute('height', height);
+	canvas.setAttribute('width', width);
+	container.appendChild(canvas);
+
+	return canvas;
+}
+
+Nuance.prototype.getLayersFromContainer = function(container_id){
+	var container = document.getElementById(container_id);
+
+	if( ! container){
+		return false;
+	}
+	
+	
+	
 }
 
 Nuance.prototype.drawImage = function(layer_num, config){
