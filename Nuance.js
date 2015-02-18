@@ -191,7 +191,11 @@ Nuance.prototype.getLayersFromContainer = function(container_id){
 
 	var cvs = container.getElementsByTagName('canvas');
 	for(var i=0; i<cvs.length; i++){
-		//@TODO
+		/*
+		 * @TODO 
+		 * add canvas to this.layers, on which level ? if there is already the chosen level, move it ? and all the superior level ?
+		 * make a dedicated addLayer function ?
+		 */
 	}
 	
 }
