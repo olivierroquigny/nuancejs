@@ -5,12 +5,6 @@
  * 
  * @TODO: layers management 
 
-	- get 
-		- the canvases already present in the container 
-			make a stack with them
-		- or the only canvas (id) 
-		- or the default canvas 
-	- make on the fly canvases in the container with IDs (done)
 	- manipulate the layer and parent on the fly (resize, move, hide, show ...)
 	- use html id as JS keys => an array linking keys to number ?
 
@@ -180,24 +174,6 @@ Nuance.prototype.addCanvas = function(container_id, id, height, width){
 	container.appendChild(canvas);
 
 	return canvas;
-}
-
-Nuance.prototype.getLayersFromContainer = function(container_id){
-	var container = document.getElementById(container_id);
-
-	if( ! container){
-		return false;
-	}
-
-	var cvs = container.getElementsByTagName('canvas');
-	for(var i=0; i<cvs.length; i++){
-		/*
-		 * @TODO 
-		 * add canvas to this.layers, on which level ? if there is already the chosen level, move it ? and all the superior level ?
-		 * make a dedicated addLayer function ?
-		 */
-	}
-	
 }
 
 Nuance.prototype.drawImage = function(layer_num, config){
