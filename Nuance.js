@@ -11,6 +11,7 @@
  * @TODO: layers management 
 
 	- manipulate the layer and parent on the fly (resize, move, hide, show ...)
+		* isn't it better to manage it directly ?
 	- use html id as JS keys => an array linking keys to number ?
 	- what about z-index ?
 
@@ -85,6 +86,7 @@ Nuance.QUAD = 5;
 Nuance.BEZIER = 6;
 Nuance.TEXT = 7;
 Nuance.CLEARRECT = 8;
+Nuance.CALLBACK = 9;
 
 Nuance.prototype.play = function play(){
 
@@ -104,10 +106,12 @@ Nuance.prototype.stop = function stop(){
 }
 
 Nuance.prototype.execFrame = function execFrame(){
+	var layer;
 	for(var i=0; i<this.layers.length; i++){
-		if(this.layers[i].frames[this.currentFrame]){
-			var frame = this.layers[i].frames[this.currentFrame];
-			if(this.layers[i].context){
+		layer = this.layers[i];
+		if(layer.frames[this.currentFrame]){
+			var frame = layer.frames[this.currentFrame];
+			if(layer.context){
 				if(frame.shapes){
 					for(var s in frame.shapes){
 						var shape = frame.shapes[s]
@@ -128,6 +132,9 @@ Nuance.prototype.execFrame = function execFrame(){
 									break;
 								case Nuance.CLEARRECT:
 									this.clearRect(i, shape);
+									break;
+								case Nuance.CALLBACK:
+									this.callbackExec(i, shape);
 									break;
 								default:
 
@@ -376,6 +383,12 @@ Nuance.prototype.drawShape = function drawShape(layer_num, config){
 	}
 	layerContext.closePath();
 	
+}
+
+Nuance.prototype.callbackExec = function callbackExec(layer_num, config){
+	config.args = config.args || [];
+	config.args.push(layer_num);
+	config.callback.apply(this, config.args);
 }
 
 Nuance.prototype.addTween = function addTween(layer_num, firstFrame, lastFrame, f_callback, args){
