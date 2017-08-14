@@ -113,8 +113,10 @@ Nuance.prototype.execFrame = function execFrame(){
 			var frame = layer.frames[this.currentFrame];
 			if(layer.context){
 				if(frame.shapes){
-					for(var s in frame.shapes){
-						var shape = frame.shapes[s]
+					var shapes = frame.shapes;
+					var s_l = shapes.length;
+					for(var s=0; s<s_l; s++){
+						var shape = shapes[s]
 						if(shape.type){
 							/* it's a complete shape as rect, circle, image ... */
 							switch(shape.type){
@@ -392,36 +394,45 @@ Nuance.prototype.callbackExec = function callbackExec(layer_num, config){
 }
 
 Nuance.prototype.addTween = function addTween(layer_num, firstFrame, lastFrame, f_callback, args){
+	var layer_frames = this.layers[layer_num].frames;
 	var frames = f_callback.call(this, firstFrame, lastFrame, args);
-	for(var f=0; f<frames.length; f++){
 
+	var f_l = frames.length;
+	for(var f=firstFrame; f<f_l; f++){
 		if(frames[f] instanceof Object){
-			var keys;
-			var layer_frames = this.layers[layer_num].frames;
-
-			if( ! layer_frames[f]){
-				layer_frames[f] = { shapes: {}}
+			if( ! layer_frames[f] || ! layer_frames[f].shapes){
+				layer_frames[f] = { shapes: [], idShapes: {}, }
 			}
 
-			if(layer_frames[f].shapes){
-				for(var s in frames[f].shapes){
-					var k;
-					if( ! layer_frames[f].shapes.hasOwnProperty(s)){
-						k = s;
-					}else{
-						do{
-							k = '';
-							var ascii = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			var layer_frame = layer_frames[f];
 
-							for( var j=0; j < 5; j++ ){
-								var r = Math.random();
-								k = k + ascii.charAt(Math.floor(r * ascii.length));
-							}
-						}while(layer_frames[f].shapes.hasOwnProperty(k));
-					}
+			if( ! layer_frame.idShapes){
+				layer_frame.idShapes = {};
+			}
 
-					layer_frames[f].shapes[k] = frames[f].shapes[s];
+			var shapes = frames[f].shapes;
+			var s_l = shapes.length;
+			var s_layer_frame = layer_frame.shapes.length;
+			for(var s=0; s<s_l; s++){
+				var k;
+				var shape = shapes[s];
+				var id = shape.id || s.toString();
+
+				if( ! layer_frame.idShapes.hasOwnProperty(id)){
+					k = id;
+				}else{
+					do{
+						k = '';
+						var ascii = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+						for( var j=0; j < 5; j++ ){
+							var r = Math.random();
+							k = k + ascii.charAt(Math.floor(r * ascii.length));
+						}
+					}while(layer_frame.idShapes.hasOwnProperty(k));
 				}
+				layer_frame.idShapes[k] = s_layer_frame;
+				layer_frame.shapes[s_layer_frame++] = shape;
 			}
 		}
 	}

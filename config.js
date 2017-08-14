@@ -39,8 +39,9 @@ window.onload = function(){
 
 		for(var i=0; i<args.pics.length; i++){
 			frames[i] = { 
-				shapes: {
-					0: {
+				shapes: [
+					{
+						id: 0,
 						type: Nuance.IMAGE,
 						sx: args.pics[i].x,
 						sy: args.pics[i].y,
@@ -52,7 +53,7 @@ window.onload = function(){
 						dh: args.pics[i].h,
 						image: args.img,
 					},
-				},
+				],
 			};	
 		}
 
@@ -72,7 +73,6 @@ window.onload = function(){
 	 * Tween's config for LAB
 	 **********************************/
 	function square(firstFrame, lastFrame, args){
-		
 		var frames = [];
 		var nbFrames = lastFrame - firstFrame;
 		if(nbFrames < 1){
@@ -85,8 +85,9 @@ window.onload = function(){
 			}
 			if(args.type === Nuance.RECT){
 				frames[currentFrame] = {
-					shapes: {
-						0: {
+					shapes: [
+						{
+							id: 0,
 							type: Nuance.RECT,
 							x: args.x,
 							y: args.y,
@@ -94,7 +95,7 @@ window.onload = function(){
 							height: 35,
 							fillStyle: 'rgba(' + args.r + ',' + args.g + ',' + args.b + ',' + coefAlpha + ')',
 						},
-					},
+					],
 				};
 			}else{
 				var segments = [];
@@ -127,8 +128,9 @@ window.onload = function(){
 					
 				}
 				frames[currentFrame] = {
-					shapes: {
-						0 : {
+					shapes: [
+						{
+							id: 0,
 							fillStyle: 'rgba(' + args.r + ',' + args.g + ',' + args.b + ',' + coefAlpha + ')',
 							/*closePath: true,*/
 							
@@ -136,7 +138,7 @@ window.onload = function(){
 							y: y,
 							segments: {}
 						}
-					},
+					],
 				};
 				for(var i=0; i<segments.length; i++){
 					frames[currentFrame].shapes[0].segments[i] = {
@@ -294,6 +296,7 @@ window.onload = function(){
 	
 	/* load the shapes as tweens */
 	var intervalGreen = limitFramesAnim.greenLab[1] - limitFramesAnim.greenLab[0];
+console.log('tweens: length: ' + tweens.length + ', ' + JSON.stringify(tweens));
 	for(var tween in tweens){
 		
 		var rand = Math.floor(Math.random() * (intervalGreen - 10)) + limitFramesAnim.greenLab[0];
