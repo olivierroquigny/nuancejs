@@ -13,6 +13,7 @@ window.onload = function(){
 	var images = new Array();
 	images[0] = new Image();
 
+	var cvsId = 'nuance';
 	var anim = new Nuance({ 
 		start: false , 
 		loop: false, 
@@ -67,7 +68,7 @@ window.onload = function(){
 		{x: 412, y: 0, w: 53, h: 163}, // c
 		{x: 465, y: 0, w: 76, h: 163}, // e
 	];
-	anim.addTween(0, limitFramesAnim.framb[0], limitFramesAnim.framb[1], nuanceLab, {img: images[0], pics: pics}); 
+	anim.addTween(cvsId, limitFramesAnim.framb[0], limitFramesAnim.framb[1], nuanceLab, {img: images[0], pics: pics}); 
 	
 	/**********************************
 	 * Tween's config for LAB
@@ -136,7 +137,7 @@ window.onload = function(){
 							
 							x: x,
 							y: y,
-							segments: {}
+							segments: [],
 						}
 					],
 				};
@@ -301,7 +302,7 @@ console.log('tweens: length: ' + tweens.length + ', ' + JSON.stringify(tweens));
 		
 		var rand = Math.floor(Math.random() * (intervalGreen - 10)) + limitFramesAnim.greenLab[0];
 		var t = tweens[tween];
-		anim.addTween(0, rand, (rand+10), square, {x: t.x, y: t.y, r: green.r, g: green.g, b: green.b, type: t.type }); 
+		anim.addTween(cvsId, rand, (rand+10), square, {x: t.x, y: t.y, r: green.r, g: green.g, b: green.b, type: t.type }); 
 	}
 	
 	/***************************************
@@ -348,7 +349,7 @@ console.log('tweens: length: ' + tweens.length + ', ' + JSON.stringify(tweens));
 	function moveSquare(frame, obj){
 		// red square
 		anim.addTween(
-			0,
+			cvsId,
 			frame + limitFramesAnim.redLab[0], /* first frame for the tween */
 			frame + limitFramesAnim.redLab[0], /* last frame */
 			square, 
@@ -392,7 +393,7 @@ console.log('tweens: length: ' + tweens.length + ', ' + JSON.stringify(tweens));
 					w_y = tweens[obj.precedent].y + 1;
 				}
 				anim.addTween( /* replace the precedent with a white square for the transparent bug on the arc border */
-					0,
+					cvsId,
 					frame + limitFramesAnim.redLab[0],
 					frame + limitFramesAnim.redLab[0], 
 					square, { 
@@ -407,7 +408,7 @@ console.log('tweens: length: ' + tweens.length + ', ' + JSON.stringify(tweens));
 			}
 			// green square
 			anim.addTween( /* replace the precedent with a green square */
-				0,
+				cvsId,
 				frame + limitFramesAnim.redLab[0],
 				frame + limitFramesAnim.redLab[0], 
 				square, { 
